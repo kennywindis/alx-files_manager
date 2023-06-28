@@ -1,29 +1,14 @@
-// 2 endpoints: '/status' and '/stats'
-import RedisClient from '../utils/redis';
-import DBClient from '../utils/db';
+import redisClient from '../utils/redis';
+import dbClient from '../utils/db';
 
-class AppController {
-  // using RedisClient method, checks if redis/db servers are running
-  static getStatus(req, res) {
+export default class AppController {
+  static getStatus(request, response) {
     const status = {
-      redis: RedisClient.isAlive(),
-      db: DBClient.isAlive(),
+      redis: redisClient.isAlive(),
+      db: dbClient.isAlive(),
     };
-    return res.status(200).send(status);
+    response.status(200).send(status);
   }
 
-  // returns number of users and files in DB
-  static getStats(req, res) {
-    (async () => {
-      const nbUsers = await DBClient.nbUsers();
-      const nbFiles = await DBClient.nbFiles();
-      return res.send({
-        users: nbUsers,
-        files: nbFiles,
-      });
-    }
-    )();
-  }
-}
+  static async getStats(request, response) {
 
-module.exports = AppController;
