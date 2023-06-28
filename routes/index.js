@@ -1,64 +1,42 @@
-import express from 'express';
-import AppController from '../controllers/AppController';
-import UsersController from '../controllers/UsersController';
-import AuthController from '../controllers/AuthController';
-import FilesController from '../controllers/FilesController';
+// File containing all endpoints of API
+const express = require('express');
 
-const cRouting = (app) => {
-  const router = express.Router();
-  app.use('/', router);
+// import controllers
+const AppController = require('../controllers/AppController');
+const UsersController = require('../controllers/UsersController');
+const AuthController = require('../controllers/AuthController');
+const FilesController = require('../controllers/FilesController');
 
-  // AppController check API
-  router.get('/status', (req, res) => {
-    AppController.getStatus(req, res);
-  });
+// router setup
+const router = (app) => {
+  const paths = express.Router();
+  app.use(express.json());
+  app.use('/', paths);
 
-  router.get('/stats', (req, res) => {
-    AppController.getStats(req, res);
-  });
-
-  // UsersController
-  router.post('/users', (req, res) => {
-    UsersController.postNew(req, res);
-  });
-
-  router.get('/users/me', (req, res) => {
-    UsersController.getMe(req, res);
-  });
-
-  // AuthController
-  router.get('/connect', (req, res) => {
-    AuthController.getConnect(req, res);
-  });
-
-  router.get('/disconnect', (req, res) => {
-    AuthController.getDisconnect(req, res);
-  });
-
-  // FilesController
-  router.post('/files', (req, res) => {
-    FilesController.postUpload(req, res);
-  });
-
-  router.get('/files', (req, res) => {
-    FilesController.getIndex(req, res);
-  });
-
-  router.get('/files/:id', (req, res) => {
-    FilesController.getShow(req, res);
-  });
-
-  router.get('/files/:id/data', (req, res) => {
-    FilesController.getFile(req, res);
-  });
-
-  router.put('/files/:id/publish', (req, res) => {
-    FilesController.putPublish(req, res);
-  });
-
-  router.put('/files/:id/unpublish', (req, res) => {
-    FilesController.putUnpublish(req, res);
-  });
+  // GET '/status'
+  paths.get('/status', AppController.getStatus);
+  // GET '/stats'
+  paths.get('/stats', AppController.getStats);
+  // POST '/users'
+  paths.post('/users', UsersController.postNew);
+  // GET '/connect'
+  paths.get('/connect', AuthController.getConnect);
+  // GET '/disconnect'
+  paths.get('/disconnect', AuthController.getDisconnect);
+  // GET '/users/me'
+  paths.get('/users/me', UsersController.getMe);
+  // POST '/files'
+  paths.post('/files', FilesController.postUpload);
+  // GET '/files/:id'
+  paths.get('/files/:id', FilesController.getShow);
+  // GET '/files'
+  paths.get('/files', FilesController.getIndex);
+  // PUT '/files/:id/publish'
+  paths.put('/files/:id/publish', FilesController.putPublish);
+  // PUT '/files/:id/publish
+  paths.put('/files/:id/unpublish', FilesController.putUnpublish);
+  // GET '/files/:id/data'
+  paths.get('/files/:id/data', FilesController.getFile);
 };
 
-module.exports = cRouting;
+module.exports = router;
