@@ -1,15 +1,15 @@
+// Express server for files_manager
 const express = require('express');
-const cRouting = require('./routes/index');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+// server properties
+const port = process.env.PORT || 5000;
+// router for API
+const router = require('./routes/index');
 
-app.use(express.json());
-
-cRouting(app);
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// put app through router to set up API - see routes/index.js
+router(app);
+// run app
+app.listen(port, () => {
+  console.log(`Express server listening on port ${port}`);
 });
-
-module.exports = app;
